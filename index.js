@@ -71,7 +71,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         const command = new AWS.GetCommandInvocationCommand(commandInvocationCommandInput);
         let response = await client.send(command);
 
-        console.log('Command Status:', status);
+        console.log('Command Status:', response.Status);
 
         // Mientras siga en ejecución, esperar.
         while (response.Status === "InProgress") {
