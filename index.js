@@ -1,5 +1,7 @@
 const DEFAULT_MAX_WAIT_EXECUTION = 3600;
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 (async function () {
     const core = require("@actions/core");
     const github = require("@actions/github");
@@ -50,6 +52,8 @@ const DEFAULT_MAX_WAIT_EXECUTION = 3600;
             }
         }
 
+        console.log('resolved max wait execution =>', maxWaitExecution);
+
         // Nuevo cliente SSM.
         const client = new AWS.SSMClient({
             secretAccessKey: awsAccessKeyId,
@@ -66,15 +70,18 @@ const DEFAULT_MAX_WAIT_EXECUTION = 3600;
         // Obtener estado de invocación de comando.
         const command = new AWS.GetCommandInvocationCommand(commandInvocationCommandInput);
         let response = await client.send(command);
-        let status = response.Status;
+
+        console.log('Command Status:', status);
 
         // Mientras siga en ejecución, esperar.
-        if (status === "InProgress") {
-            await AWS.waitUntilCommandExecuted({ maxWaitTime: maxWaitExecution }, commandInvocationCommandInput);
+        while (response.Status === "InProgress") {
             response = await client.send(command);
+            console.log('Command Status:', response.Status);
+            await delay(1000);
         }
 
         // Datos de salida.
+        core.setOutput("command-id", awsCommandId);
         core.setOutput("status", response.Status || "-");
         core.setOutput("stdout", response.StandardOutputContent || "-");
     } catch (error) {
