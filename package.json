@@ -2,10 +2,7 @@
     "name": "aws-ssm-get-invocation-output",
     "version": "1.0.0",
     "description": "Obtiene la salida de un comando ejecutado remotamente vía AWS SSM.",
-    "main": "dist/index.js",
-    "scripts": {
-        "build": "echo pendiente"
-    },
+    "main": "index.js",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/fabio-gonzalez-itti-digital/ssm-get-invocation-output.git"
@@ -15,7 +12,7 @@
     "dependencies": {
         "@actions/core": "1.2.7",
         "@actions/github": "4.0.0",
-        "aws-sdk": "2.892.0",
+        "@aws-sdk/client-ssm": "3.616.0",
         "node-fetch": "2.6.1"
     }
 }

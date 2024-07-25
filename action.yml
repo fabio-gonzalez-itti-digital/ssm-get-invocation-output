@@ -19,6 +19,9 @@ inputs:
   command-id:
     required: true
     description: "AWS SSM Command id"
+  max-wait-execution:
+    required: false
+    description: "Max time to wait for in-progress Command."
 
 runs:
   using: "node16"
