@@ -84,6 +84,10 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         core.setOutput("command-id", awsCommandId);
         core.setOutput("status", response.Status || "-");
         core.setOutput("stdout", response.StandardOutputContent || "-");
+
+        // Ok.
+        console.log('** output');
+        console.log(response.StandardOutputContent || "-");
     } catch (error) {
         core.setFailed(error.message);
     }
