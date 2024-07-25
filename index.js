@@ -12,7 +12,7 @@ const DEFAULT_MAX_WAIT_EXECUTION = 3600;
         const awsRegion = core.getInput('aws-region');
         const awsInstanceId = core.getInput('instance-id');
         const awsCommandId = core.getInput('command-id');
-        const maxWaitExecution = core.getInput('max-wait-execution');
+        let maxWaitExecution = core.getInput('max-wait-execution');
 
         // Controles.
         if (awsAccessKeyId === null || awsAccessKeyId === undefined || awsAccessKeyId === "") {
