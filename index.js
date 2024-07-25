@@ -91,10 +91,26 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         core.setOutput("command-id", awsCommandId);
         core.setOutput("status", response.Status || "-");
         core.setOutput("stdout", response.StandardOutputContent || "-");
+        core.setOutput("stderr", response.StandardErrorContent || "-");
 
-        // Ok.
-        console.log('** output');
-        console.log(response.StandardOutputContent || "-");
+        // Control - KO.
+        if(response.Status === "Failed") {
+            console.log("** stderr");
+            console.log(response.StandardErrorContent || "-");
+            core.setFailed("Command failed.");
+            return;
+        }
+
+        // Control - OK.
+        if(response.Status === "Success") {
+            console.log('** stdout');
+            console.log(response.StandardOutputContent || "-");
+            return;
+        }
+
+        // Ver en consola de AWS.
+        console.log('Please check AWS Console.');
+        core.setFailed('Please check AWS Console.');
     } catch (error) {
         core.setFailed(error.message);
     }
