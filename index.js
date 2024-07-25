@@ -52,7 +52,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
             }
         }
 
-        console.log('resolved max wait execution =>', maxWaitExecution);
+        console.log('Resolved max wait execution (seconds) =>', maxWaitExecution);
 
         // Nuevo cliente SSM.
         const client = new AWS.SSMClient({
@@ -74,10 +74,17 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         console.log('Command Status:', response.Status);
 
         // Mientras siga en ejecución, esperar.
+        const start = Date.now();
         while (response.Status === "InProgress") {
             response = await client.send(command);
             console.log('Command Status:', response.Status);
             await delay(1000);
+            const now = Date.now();
+            if(((now - start) / 1000) >= maxWaitExecution) {
+                console.log('Timeout Reached.');
+                response = {"Status": "Tiemout", "StandardOutputContent": ""};
+                break;
+            }
         }
 
         // Datos de salida.
